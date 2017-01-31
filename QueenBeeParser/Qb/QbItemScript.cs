@@ -13,7 +13,7 @@ namespace Nanook.QueenBee.Parser
             _strings = null;
 
             if (QbFile.AllowedScriptStringChars == null || QbFile.AllowedScriptStringChars.Length == 0)
-                _allowedStringChars = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890\/?!""£$%^&*()-+{}[]'#@~?><,. =®©_";
+                _allowedStringChars = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890\/?!""£$%^&*()-+{}[]'#@~?><,. =®©_=:";
             else
                 _allowedStringChars = QbFile.AllowedScriptStringChars;
         }
