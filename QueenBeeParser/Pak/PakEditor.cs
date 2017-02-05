@@ -96,7 +96,10 @@ namespace Nanook.QueenBee.Parser
                                 debugFileContents = pakDebug.ExtractFileToString(filename);
 
                                 if (debugFileContents.Length != 0)
+                                {
                                     addDebugFilename(debugFileContents, qbKeyFilenames, crc);
+                                    QbFile.PopulateDebugNames(debugFileContents);
+                                }
                             }
                         }
                     }

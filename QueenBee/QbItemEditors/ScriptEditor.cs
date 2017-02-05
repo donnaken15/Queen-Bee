@@ -26,6 +26,8 @@ namespace Nanook.QueenBee
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.SaveFileDialog export;
         private System.Windows.Forms.OpenFileDialog import;
+        private TabPage tabSource;
+        private TextBox txtSource;
         private System.Windows.Forms.TextBox txtScript;
     
         public ScriptEditor() : base()
@@ -52,6 +54,7 @@ namespace Nanook.QueenBee
                 eiUnknown.TextBoxLeft = w;
 
                 txtScript.Text = bytesToHexAsciiString(_qbItem.ScriptData);
+                txtSource.Text = _qbItem.Translate(QbFile.DebugNames);
 
                 _preventUpdate = false;
 
@@ -94,6 +97,7 @@ namespace Nanook.QueenBee
 
                 loadStringList();
                 txtScript.Text = bytesToHexAsciiString(_qbItem.ScriptData);
+                txtSource.Text = _qbItem.Translate(QbFile.DebugNames);
 
                 base.UpdateQbItem();
             }
@@ -375,6 +379,8 @@ namespace Nanook.QueenBee
             this.txtItem = new System.Windows.Forms.TextBox();
             this.lstItems = new System.Windows.Forms.ListBox();
             this.tabUncompressedScript = new System.Windows.Forms.TabPage();
+            this.tabSource = new System.Windows.Forms.TabPage();
+            this.txtSource = new System.Windows.Forms.TextBox();
             this.err = new System.Windows.Forms.ErrorProvider(this.components);
             this.export = new System.Windows.Forms.SaveFileDialog();
             this.import = new System.Windows.Forms.OpenFileDialog();
@@ -383,14 +389,15 @@ namespace Nanook.QueenBee
             this.tabs.SuspendLayout();
             this.tabString.SuspendLayout();
             this.tabUncompressedScript.SuspendLayout();
+            this.tabSource.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.err)).BeginInit();
             this.SuspendLayout();
             // 
             // txtScript
             // 
-            this.txtScript.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtScript.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtScript.BackColor = System.Drawing.SystemColors.Window;
             this.txtScript.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtScript.HideSelection = false;
@@ -416,8 +423,8 @@ namespace Nanook.QueenBee
             // 
             // eiItemQbKey
             // 
-            this.eiItemQbKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.eiItemQbKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.eiItemQbKey.Location = new System.Drawing.Point(-4, 9);
             this.eiItemQbKey.Name = "eiItemQbKey";
             this.eiItemQbKey.Size = new System.Drawing.Size(322, 24);
@@ -426,8 +433,8 @@ namespace Nanook.QueenBee
             // 
             // eiUnknown
             // 
-            this.eiUnknown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.eiUnknown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.eiUnknown.Location = new System.Drawing.Point(-4, 32);
             this.eiUnknown.Name = "eiUnknown";
             this.eiUnknown.Size = new System.Drawing.Size(322, 24);
@@ -436,11 +443,12 @@ namespace Nanook.QueenBee
             // 
             // tabs
             // 
-            this.tabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabs.Controls.Add(this.tabString);
             this.tabs.Controls.Add(this.tabUncompressedScript);
+            this.tabs.Controls.Add(this.tabSource);
             this.tabs.Location = new System.Drawing.Point(3, 62);
             this.tabs.Name = "tabs";
             this.tabs.SelectedIndex = 0;
@@ -464,8 +472,8 @@ namespace Nanook.QueenBee
             // 
             // txtWarning
             // 
-            this.txtWarning.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtWarning.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtWarning.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtWarning.Location = new System.Drawing.Point(2, 259);
             this.txtWarning.Multiline = true;
@@ -488,8 +496,8 @@ namespace Nanook.QueenBee
             // 
             // txtItem
             // 
-            this.txtItem.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtItem.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.err.SetIconPadding(this.txtItem, 37);
             this.txtItem.Location = new System.Drawing.Point(0, 229);
             this.txtItem.Name = "txtItem";
@@ -499,9 +507,9 @@ namespace Nanook.QueenBee
             // 
             // lstItems
             // 
-            this.lstItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lstItems.FormattingEnabled = true;
             this.lstItems.IntegralHeight = false;
             this.lstItems.Location = new System.Drawing.Point(0, 0);
@@ -520,6 +528,29 @@ namespace Nanook.QueenBee
             this.tabUncompressedScript.TabIndex = 1;
             this.tabUncompressedScript.Text = "Uncompressed Script";
             this.tabUncompressedScript.UseVisualStyleBackColor = true;
+            // 
+            // tabSource
+            // 
+            this.tabSource.Controls.Add(this.txtSource);
+            this.tabSource.Location = new System.Drawing.Point(4, 22);
+            this.tabSource.Name = "tabSource";
+            this.tabSource.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSource.Size = new System.Drawing.Size(304, 337);
+            this.tabSource.TabIndex = 2;
+            this.tabSource.Text = "Decompiled Source";
+            this.tabSource.UseVisualStyleBackColor = true;
+            // 
+            // txtSource
+            // 
+            this.txtSource.BackColor = System.Drawing.SystemColors.Window;
+            this.txtSource.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtSource.Location = new System.Drawing.Point(3, 3);
+            this.txtSource.Multiline = true;
+            this.txtSource.Name = "txtSource";
+            this.txtSource.ReadOnly = true;
+            this.txtSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtSource.Size = new System.Drawing.Size(298, 331);
+            this.txtSource.TabIndex = 0;
             // 
             // err
             // 
@@ -572,6 +603,8 @@ namespace Nanook.QueenBee
             this.tabString.PerformLayout();
             this.tabUncompressedScript.ResumeLayout(false);
             this.tabUncompressedScript.PerformLayout();
+            this.tabSource.ResumeLayout(false);
+            this.tabSource.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.err)).EndInit();
             this.ResumeLayout(false);
 

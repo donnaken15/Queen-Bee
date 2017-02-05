@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Nanook.QueenBee.Parser
 {
-    public class QbItemScript : QbItemBase
+    public partial class QbItemScript : QbItemBase
     {
         public QbItemScript(QbFile root) : base(root)
         {

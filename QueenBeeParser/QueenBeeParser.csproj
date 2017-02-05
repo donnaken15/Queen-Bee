@@ -87,6 +87,7 @@
     <Compile Include="Qb\QbItemStructArray.cs" />
     <Compile Include="Qb\QbItemUnknown.cs" />
     <Compile Include="Qb\QbKey.cs" />
+    <Compile Include="Qb\ScriptDecompile.cs" />
     <Compile Include="Qb\ScriptString.cs" />
     <Compile Include="Zlib\Adler32.cs" />
     <Compile Include="Zlib\Deflate.cs" />
