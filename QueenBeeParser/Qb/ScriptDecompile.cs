@@ -67,10 +67,10 @@ namespace Nanook.QueenBee.Parser
                             currentLine.Append(" + ");
                             break;
                         case 0x0C:
-                            currentLine.Append(" * ");
+                            currentLine.Append(" / ");
                             break;
                         case 0x0D:
-                            currentLine.Append(" / ");
+                            currentLine.Append(" * ");
                             break;
                         case 0x0E:
                             isStartOfLine = true;
@@ -244,7 +244,7 @@ namespace Nanook.QueenBee.Parser
                                 ;
                             if (b == 1 && input.ReadByte() == 0) {
                                 long structStartPos = ms.Position - 4;
-                                currentLine.AppendFormat(getQbStruct(input, structStartPos), new String('\t', indent));
+                                currentLine.AppendFormat(getQbStruct(input, structStartPos, debugNames), new String('\t', indent));
                                 ms.Seek(structStartPos + (long) length, SeekOrigin.Begin);
                             } else {
                                 throw new Exception("Invalid qb struct; cannot continue decompilation.");
