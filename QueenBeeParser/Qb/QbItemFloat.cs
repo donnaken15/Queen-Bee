@@ -11,14 +11,14 @@ namespace Nanook.QueenBee.Parser
         {
         }
 
-        public override void Create(QbItemType type)
+        public void Create(QbItemType type, int length)
         {
             if (type != QbItemType.SectionFloat && type != QbItemType.ArrayFloat && type != QbItemType.StructItemFloat)
                 throw new ApplicationException(string.Format("type '{0}' is not a float item type", type.ToString()));
 
             base.Create(type);
 
-            this.Values = new float[1]; //sets item count
+            this.Values = new float[length]; //sets item count
             _values[0] = 0;
         }
 

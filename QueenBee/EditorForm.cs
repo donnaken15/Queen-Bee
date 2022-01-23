@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
-using System.Xml.Serialization;
 using System.Configuration;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
@@ -74,7 +71,7 @@ namespace Nanook.QueenBee
                 else if (attribute is AssemblyCompanyAttribute)
                     assCompany = (((AssemblyCompanyAttribute)attribute).Company);
             }
-            this.Text = string.Format("{0} ({1})     v{2}.{3}     by {4}", assName, assDescription, assVersion.Major.ToString(), assVersion.Minor.ToString(), assCompany);
+            this.Text = string.Format("{0} v{2}.{3} by {4}", assName, assDescription, assVersion.Major.ToString(), assVersion.Minor.ToString(), assCompany);
 
             cboFormatType.SelectedIndex = 0;
 
@@ -2377,10 +2374,12 @@ This PAK has no StructItem children so this setting could not be detected.", "St
                 AppState.LoadSearchSplitterPosition(splitSearch, loadSetting(c, "SearchSplitterPosition"));
                 AppState.LoadQbSplitterPosition(splitQb, loadSetting(c, "QbSplitterPosition"));
 
-                QbFile.AllowedScriptStringChars = loadSetting(c, "AllowedScriptStringChars", @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890\/?!""£$%^&*()-+{}[]'#@~?><,. =®©_");
+                QbFile.AllowedScriptStringChars = loadSetting(c, "AllowedScriptStringChars", @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890\/?!""£$%^&*()-+{}[]'#@~?><,. =:®©_");
 
                 if (!QbFile.AllowedScriptStringChars.Contains("="))
                     QbFile.AllowedScriptStringChars = QbFile.AllowedScriptStringChars + "="; //added v1.1
+                if (!QbFile.AllowedScriptStringChars.Contains(":"))
+                    QbFile.AllowedScriptStringChars = QbFile.AllowedScriptStringChars + ":"; //added v1.10
 
                 cboFormatType.Text = AppState.InputFormat;
                 txtPakFile.Text = AppState.PakFilename;

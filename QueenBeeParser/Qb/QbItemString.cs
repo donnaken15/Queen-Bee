@@ -11,7 +11,7 @@ namespace Nanook.QueenBee.Parser
         {
         }
 
-        public override void Create(QbItemType type)
+        public void Create(QbItemType type, int length)
         {
             if (type != QbItemType.SectionString && type != QbItemType.ArrayString && type != QbItemType.StructItemString &&
                 type != QbItemType.SectionStringW && type != QbItemType.ArrayStringW && type != QbItemType.StructItemStringW)
@@ -25,7 +25,7 @@ namespace Nanook.QueenBee.Parser
 
             _charWidth = !_isUnicode ? 1 : 2;
 
-            this.Strings = new string[1]; //sets item count
+            this.Strings = new string[length]; //sets item count
             _strings[0] = "";
         }
 

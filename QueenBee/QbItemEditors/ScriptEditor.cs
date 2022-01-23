@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using Nanook.QueenBee.Parser;
+using System.Drawing;
+using System.ComponentModel;
 
 namespace Nanook.QueenBee
 {
@@ -52,6 +54,7 @@ namespace Nanook.QueenBee
                 eiUnknown.TextBoxLeft = w;
 
                 txtScript.Text = bytesToHexAsciiString(_qbItem.ScriptData);
+                txtSource.Text = _qbItem.Translate(QbFile.DebugNames);
 
                 _preventUpdate = false;
 
@@ -94,6 +97,7 @@ namespace Nanook.QueenBee
 
                 loadStringList();
                 txtScript.Text = bytesToHexAsciiString(_qbItem.ScriptData);
+                txtSource.Text = _qbItem.Translate(QbFile.DebugNames);
 
                 base.UpdateQbItem();
             }
@@ -362,225 +366,190 @@ namespace Nanook.QueenBee
 
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScriptEditor));
-            this.txtScript = new System.Windows.Forms.TextBox();
-            this.btnUpdate = new System.Windows.Forms.Button();
-            this.eiItemQbKey = new Nanook.QueenBee.GenericQbEditItem();
-            this.eiUnknown = new Nanook.QueenBee.GenericQbEditItem();
-            this.tabs = new System.Windows.Forms.TabControl();
-            this.tabString = new System.Windows.Forms.TabPage();
-            this.txtWarning = new System.Windows.Forms.TextBox();
-            this.btnSet = new System.Windows.Forms.Button();
-            this.txtItem = new System.Windows.Forms.TextBox();
-            this.lstItems = new System.Windows.Forms.ListBox();
-            this.tabUncompressedScript = new System.Windows.Forms.TabPage();
-            this.err = new System.Windows.Forms.ErrorProvider(this.components);
-            this.export = new System.Windows.Forms.SaveFileDialog();
-            this.import = new System.Windows.Forms.OpenFileDialog();
-            this.btnExport = new System.Windows.Forms.Button();
-            this.btnImport = new System.Windows.Forms.Button();
+            this.components = new Container();
+            ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof(ScriptEditor));
+            this.txtScript = new TextBox();
+            this.btnUpdate = new Button();
+            this.eiItemQbKey = new GenericQbEditItem();
+            this.eiUnknown = new GenericQbEditItem();
+            this.tabs = new TabControl();
+            this.tabString = new TabPage();
+            this.txtWarning = new TextBox();
+            this.btnSet = new Button();
+            this.txtItem = new TextBox();
+            this.lstItems = new ListBox();
+            this.tabUncompressedScript = new TabPage();
+            this.tabSource = new TabPage();
+            this.txtSource = new TextBox();
+            this.err = new ErrorProvider(this.components);
+            this.export = new SaveFileDialog();
+            this.import = new OpenFileDialog();
+            this.btnExport = new Button();
+            this.btnImport = new Button();
             this.tabs.SuspendLayout();
             this.tabString.SuspendLayout();
             this.tabUncompressedScript.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.err)).BeginInit();
-            this.SuspendLayout();
-            // 
-            // txtScript
-            // 
-            this.txtScript.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtScript.BackColor = System.Drawing.SystemColors.Window;
-            this.txtScript.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabSource.SuspendLayout();
+            ((ISupportInitialize)this.err).BeginInit();
+            base.SuspendLayout();
+            this.txtScript.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.txtScript.BackColor = SystemColors.Window;
+            this.txtScript.Font = new Font("Courier New", 9.75f, FontStyle.Regular, GraphicsUnit.Point, 0);
             this.txtScript.HideSelection = false;
-            this.txtScript.Location = new System.Drawing.Point(0, 1);
+            this.txtScript.Location = new Point(0, 1);
             this.txtScript.Multiline = true;
             this.txtScript.Name = "txtScript";
             this.txtScript.ReadOnly = true;
-            this.txtScript.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtScript.Size = new System.Drawing.Size(303, 336);
+            this.txtScript.ScrollBars = ScrollBars.Both;
+            this.txtScript.Size = new Size(303, 336);
             this.txtScript.TabIndex = 0;
             this.txtScript.WordWrap = false;
-            // 
-            // btnUpdate
-            // 
-            this.btnUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUpdate.Location = new System.Drawing.Point(240, 431);
+            this.btnUpdate.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
+            this.btnUpdate.Location = new Point(240, 431);
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(75, 23);
+            this.btnUpdate.Size = new Size(75, 23);
             this.btnUpdate.TabIndex = 5;
             this.btnUpdate.Text = "Update";
             this.btnUpdate.UseVisualStyleBackColor = true;
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
-            // 
-            // eiItemQbKey
-            // 
-            this.eiItemQbKey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.eiItemQbKey.Location = new System.Drawing.Point(-4, 9);
+            this.btnUpdate.Click += this.btnUpdate_Click;
+            this.eiItemQbKey.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.eiItemQbKey.Location = new Point(-4, 9);
             this.eiItemQbKey.Name = "eiItemQbKey";
-            this.eiItemQbKey.Size = new System.Drawing.Size(322, 24);
+            this.eiItemQbKey.Size = new Size(322, 24);
             this.eiItemQbKey.TabIndex = 0;
             this.eiItemQbKey.TextBoxLeft = 66;
-            // 
-            // eiUnknown
-            // 
-            this.eiUnknown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.eiUnknown.Location = new System.Drawing.Point(-4, 32);
+            this.eiUnknown.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+            this.eiUnknown.Location = new Point(-4, 32);
             this.eiUnknown.Name = "eiUnknown";
-            this.eiUnknown.Size = new System.Drawing.Size(322, 24);
+            this.eiUnknown.Size = new Size(322, 24);
             this.eiUnknown.TabIndex = 1;
             this.eiUnknown.TextBoxLeft = 66;
-            // 
-            // tabs
-            // 
-            this.tabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabs.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
             this.tabs.Controls.Add(this.tabString);
             this.tabs.Controls.Add(this.tabUncompressedScript);
-            this.tabs.Location = new System.Drawing.Point(3, 62);
+            this.tabs.Controls.Add(this.tabSource);
+            this.tabs.Location = new Point(3, 62);
             this.tabs.Name = "tabs";
             this.tabs.SelectedIndex = 0;
-            this.tabs.Size = new System.Drawing.Size(312, 363);
+            this.tabs.Size = new Size(312, 363);
             this.tabs.TabIndex = 2;
-            this.tabs.SelectedIndexChanged += new System.EventHandler(this.tabs_SelectedIndexChanged);
-            // 
-            // tabString
-            // 
+            this.tabs.SelectedIndexChanged += this.tabs_SelectedIndexChanged;
             this.tabString.Controls.Add(this.txtWarning);
             this.tabString.Controls.Add(this.btnSet);
             this.tabString.Controls.Add(this.txtItem);
             this.tabString.Controls.Add(this.lstItems);
-            this.tabString.Location = new System.Drawing.Point(4, 22);
+            this.tabString.Location = new Point(4, 22);
             this.tabString.Name = "tabString";
-            this.tabString.Padding = new System.Windows.Forms.Padding(3);
-            this.tabString.Size = new System.Drawing.Size(304, 337);
+            this.tabString.Padding = new Padding(3);
+            this.tabString.Size = new Size(304, 337);
             this.tabString.TabIndex = 0;
             this.tabString.Text = "Strings";
             this.tabString.UseVisualStyleBackColor = true;
-            // 
-            // txtWarning
-            // 
-            this.txtWarning.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtWarning.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtWarning.Location = new System.Drawing.Point(2, 259);
+            this.txtWarning.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
+            this.txtWarning.BorderStyle = BorderStyle.None;
+            this.txtWarning.Location = new Point(2, 259);
             this.txtWarning.Multiline = true;
             this.txtWarning.Name = "txtWarning";
             this.txtWarning.ReadOnly = true;
-            this.txtWarning.Size = new System.Drawing.Size(300, 78);
+            this.txtWarning.Size = new Size(300, 78);
             this.txtWarning.TabIndex = 3;
-            this.txtWarning.Text = resources.GetString("txtWarning.Text");
-            // 
-            // btnSet
-            // 
-            this.btnSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSet.Location = new System.Drawing.Point(249, 229);
+            //this.txtWarning.Text = componentResourceManager.GetString("txtWarning.Text");
+            this.btnSet.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
+            this.btnSet.Location = new Point(249, 229);
             this.btnSet.Name = "btnSet";
-            this.btnSet.Size = new System.Drawing.Size(35, 21);
+            this.btnSet.Size = new Size(35, 21);
             this.btnSet.TabIndex = 2;
             this.btnSet.Text = "Set";
             this.btnSet.UseVisualStyleBackColor = true;
-            this.btnSet.Click += new System.EventHandler(this.btnSet_Click);
-            // 
-            // txtItem
-            // 
-            this.txtItem.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSet.Click += this.btnSet_Click;
+            this.txtItem.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
             this.err.SetIconPadding(this.txtItem, 37);
-            this.txtItem.Location = new System.Drawing.Point(0, 229);
+            this.txtItem.Location = new Point(0, 229);
             this.txtItem.Name = "txtItem";
-            this.txtItem.Size = new System.Drawing.Size(249, 20);
+            this.txtItem.Size = new Size(249, 20);
             this.txtItem.TabIndex = 1;
-            this.txtItem.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtItem_KeyDown);
-            // 
-            // lstItems
-            // 
-            this.lstItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtItem.KeyDown += this.txtItem_KeyDown;
+            this.lstItems.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
             this.lstItems.FormattingEnabled = true;
             this.lstItems.IntegralHeight = false;
-            this.lstItems.Location = new System.Drawing.Point(0, 0);
+            this.lstItems.Location = new Point(0, 0);
             this.lstItems.Name = "lstItems";
-            this.lstItems.Size = new System.Drawing.Size(304, 223);
+            this.lstItems.Size = new Size(304, 223);
             this.lstItems.TabIndex = 0;
-            this.lstItems.SelectedIndexChanged += new System.EventHandler(this.lstItems_SelectedIndexChanged);
-            // 
-            // tabUncompressedScript
-            // 
+            this.lstItems.SelectedIndexChanged += this.lstItems_SelectedIndexChanged;
             this.tabUncompressedScript.Controls.Add(this.txtScript);
-            this.tabUncompressedScript.Location = new System.Drawing.Point(4, 22);
+            this.tabUncompressedScript.Location = new Point(4, 22);
             this.tabUncompressedScript.Name = "tabUncompressedScript";
-            this.tabUncompressedScript.Padding = new System.Windows.Forms.Padding(3);
-            this.tabUncompressedScript.Size = new System.Drawing.Size(304, 337);
+            this.tabUncompressedScript.Padding = new Padding(3);
+            this.tabUncompressedScript.Size = new Size(304, 337);
             this.tabUncompressedScript.TabIndex = 1;
             this.tabUncompressedScript.Text = "Uncompressed Script";
             this.tabUncompressedScript.UseVisualStyleBackColor = true;
-            // 
-            // err
-            // 
+            this.tabSource.Controls.Add(this.txtSource);
+            this.tabSource.Location = new Point(4, 22);
+            this.tabSource.Name = "tabSource";
+            this.tabSource.Padding = new Padding(3);
+            this.tabSource.Size = new Size(304, 337);
+            this.tabSource.TabIndex = 2;
+            this.tabSource.Text = "Decompiled Source";
+            this.tabSource.UseVisualStyleBackColor = true;
+            this.txtSource.BackColor = SystemColors.Window;
+            this.txtSource.Dock = DockStyle.Fill;
+            this.txtSource.Location = new Point(3, 3);
+            this.txtSource.Multiline = true;
+            this.txtSource.Name = "txtSource";
+            this.txtSource.ReadOnly = true;
+            this.txtSource.ScrollBars = ScrollBars.Vertical;
+            this.txtSource.Size = new Size(298, 331);
+            this.txtSource.TabIndex = 0;
+            this.txtSource.Font = new Font("Courier New", 9f, FontStyle.Regular, GraphicsUnit.Point, 0);
             this.err.ContainerControl = this;
-            // 
-            // export
-            // 
             this.export.AddExtension = false;
-            // 
-            // import
-            // 
             this.import.Title = "Open QB to Replace in PAK";
-            // 
-            // btnExport
-            // 
-            this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnExport.Location = new System.Drawing.Point(3, 431);
+            this.btnExport.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+            this.btnExport.Location = new Point(3, 431);
             this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(75, 23);
+            this.btnExport.Size = new Size(75, 23);
             this.btnExport.TabIndex = 3;
             this.btnExport.Text = "Export...";
             this.btnExport.UseVisualStyleBackColor = true;
-            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
-            // 
-            // btnImport
-            // 
-            this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnImport.Location = new System.Drawing.Point(84, 431);
+            this.btnExport.Click += this.btnExport_Click;
+            this.btnImport.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+            this.btnImport.Location = new Point(84, 431);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(75, 23);
+            this.btnImport.Size = new Size(75, 23);
             this.btnImport.TabIndex = 4;
             this.btnImport.Text = "Import...";
             this.btnImport.UseVisualStyleBackColor = true;
-            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
-            // 
-            // ScriptEditor
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.Controls.Add(this.btnImport);
-            this.Controls.Add(this.btnExport);
-            this.Controls.Add(this.eiItemQbKey);
-            this.Controls.Add(this.eiUnknown);
-            this.Controls.Add(this.tabs);
-            this.Controls.Add(this.btnUpdate);
-            this.Name = "ScriptEditor";
-            this.Size = new System.Drawing.Size(318, 461);
-            this.Load += new System.EventHandler(this.ScriptEditor_Load);
+            this.btnImport.Click += this.btnImport_Click;
+            base.AutoScaleDimensions = new SizeF(6f, 13f);
+            base.Controls.Add(this.btnImport);
+            base.Controls.Add(this.btnExport);
+            base.Controls.Add(this.eiItemQbKey);
+            base.Controls.Add(this.eiUnknown);
+            base.Controls.Add(this.tabs);
+            base.Controls.Add(this.btnUpdate);
+            base.Name = "ScriptEditor";
+            base.Size = new Size(318, 461);
+            base.Load += this.ScriptEditor_Load;
             this.tabs.ResumeLayout(false);
             this.tabString.ResumeLayout(false);
             this.tabString.PerformLayout();
             this.tabUncompressedScript.ResumeLayout(false);
             this.tabUncompressedScript.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.err)).EndInit();
-            this.ResumeLayout(false);
-
+            this.tabSource.ResumeLayout(false);
+            this.tabSource.PerformLayout();
+            ((ISupportInitialize)this.err).EndInit();
+            base.ResumeLayout(false);
         }
 
         private bool _preventUpdate;
         private const int _cl = 16; //chars per line
         private const string _fileExt = "qbScript";
         private QbItemScript _qbItem;
+
+        private TabPage tabSource;
+        private TextBox txtSource;
 
 
 

@@ -147,6 +147,8 @@ namespace Nanook.QueenBee.Parser
             _supportedChildItems.Add(QbItemType.Floats, noComplexChildren);
 
             _supportedChildItems.Add(QbItemType.Unknown, noComplexChildren);
+
+            DebugNames = new Dictionary<uint, string>();
         }
 
         /// <summary>
@@ -399,7 +401,7 @@ namespace Nanook.QueenBee.Parser
 
         private void loadDebugFile(string debugFileContents)
         {
-            _debugNames = new Dictionary<uint, string>();
+            DebugNames = new Dictionary<uint, string>();
 
             string[] d = debugFileContents.Replace("\r", "").Split(new char[] { '\n' });
 
@@ -973,7 +975,12 @@ namespace Nanook.QueenBee.Parser
 
         private static string _allowedScriptStringChars;
 
-        private Dictionary<uint, string> _debugNames;
+        private Dictionary<uint, string> _debugNames {
+            get
+            {
+                return DebugNames;
+            }
+        }
         private uint _lengthCheckStart;
         private uint _magic;
         private uint _fileSize;
@@ -982,6 +989,8 @@ namespace Nanook.QueenBee.Parser
         private uint _fileId;
 
         private static Dictionary<QbItemType, List<QbItemType>> _supportedChildItems;
+        public static Dictionary<uint, string> DebugNames;
+
 
     }
 

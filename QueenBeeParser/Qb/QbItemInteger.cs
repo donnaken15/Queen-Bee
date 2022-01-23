@@ -11,7 +11,7 @@ namespace Nanook.QueenBee.Parser
         {
         }
 
-        public override void Create(QbItemType type)
+        public void Create(QbItemType type, int length)
         {
             if (type != QbItemType.SectionInteger && type != QbItemType.SectionStringPointer &&
                 type != QbItemType.ArrayInteger && type != QbItemType.ArrayStringPointer &&
@@ -20,7 +20,7 @@ namespace Nanook.QueenBee.Parser
 
             base.Create(type);
 
-            this.Values = new uint[1]; //sets item count
+            this.Values = new uint[length]; //sets item count
             _values[0] = 0;
         }
 
