@@ -1,6 +1,6 @@
-
+#if !NO_ZLIB
 //
-// This file is part of Rebex ZlibStream for .NET and is based 
+// This file is part of Rebex ZlibStream for .NET and is based
 // on JCraft's JZlib Java library.
 // You can download the latest version from http://www.rebex.net/zlib-stream.net/
 //
@@ -13,8 +13,8 @@ modification, are permitted provided that the following conditions are met:
 1. Redistributions of source code must retain the above copyright notice,
 this list of conditions and the following disclaimer.
 
-2. Redistributions in binary form must reproduce the above copyright 
-notice, this list of conditions and the following disclaimer in 
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in
 the documentation and/or other materials provided with the distribution.
 
 3. The names of the authors may not be used to endorse or promote products
@@ -39,12 +39,12 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 namespace Rebex.IO.Compression
 {
-	
+
 	internal sealed class InfCodes
 	{
-		
+
 		private static readonly int[] inflate_mask = new int[]{0x00000000, 0x00000001, 0x00000003, 0x00000007, 0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f, 0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff, 0x00000fff, 0x00001fff, 0x00003fff, 0x00007fff, 0x0000ffff};
-		
+
 		private const int Z_OK = 0;
 		private const int Z_STREAM_END = 1;
 		private const int Z_NEED_DICT = 2;
@@ -54,10 +54,10 @@ namespace Rebex.IO.Compression
 		private const int Z_MEM_ERROR = - 4;
 		private const int Z_BUF_ERROR = - 5;
 		private const int Z_VERSION_ERROR = - 6;
-		
+
 		// waiting for "i:"=input,
-		//             "o:"=output,
-		//             "x:"=nothing
+		// "o:"=output,
+		// "x:"=nothing
 		private const int START = 0; // x: set up for LEN
 		private const int LEN = 1; // i: get length/literal/eob next
 		private const int LENEXT = 2; // i: getting length extra (have base)
@@ -68,29 +68,29 @@ namespace Rebex.IO.Compression
 		private const int WASH = 7; // o: got eob, possibly still output waiting
 		private const int END = 8; // x: got eob and all data flushed
 		private const int BADCODE = 9; // x: got error
-		
+
 		internal int mode; // current inflate_codes mode
-		
+
 		// mode dependent information
 		internal int len;
-		
+
 		internal int[] tree; // pointer into tree
 		internal int tree_index = 0;
 		internal int need; // bits needed
-		
+
 		internal int lit;
-		
+
 		// if EXT or COPY, where and how much
 		internal int get_Renamed; // bits to get for extra
 		internal int dist; // distance back to copy from
-		
+
 		internal byte lbits; // ltree bits decoded per branch
 		internal byte dbits; // dtree bits decoder per branch
 		internal int[] ltree; // literal/length/eob tree
 		internal int ltree_index; // literal/length/eob tree
 		internal int[] dtree; // distance tree
 		internal int dtree_index; // distance tree
-		
+
 		internal InfCodes()
 		{
 		}
@@ -105,7 +105,7 @@ namespace Rebex.IO.Compression
 			dtree_index = td_index;
 			tree = null;
 		}
-		
+
 		internal int proc(InfBlocks s, ZStream z, int r)
 		{
 			int j; // temporary storage
@@ -119,30 +119,30 @@ namespace Rebex.IO.Compression
 			int q; // output window write pointer
 			int m; // bytes to end of window or read pointer
 			int f; // pointer to copy strings from
-			
+
 			// copy input/output information to locals (UPDATE macro restores)
 			p = z.next_in_index; n = z.avail_in; b = s.bitb; k = s.bitk;
 			q = s.write; m = q < s.read?s.read - q - 1:s.end - q;
-			
+
 			// process input and output based on current state
 			while (true)
 			{
 				switch (mode)
 				{
-					
+
 					// waiting for "i:"=input, "o:"=output, "x:"=nothing
-					case START:  // x: set up for LEN
+					case START:	 // x: set up for LEN
 						if (m >= 258 && n >= 10)
 						{
-							
+
 							s.bitb = b; s.bitk = k;
 							z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 							s.write = q;
 							r = inflate_fast(lbits, dbits, ltree, ltree_index, dtree, dtree_index, s, z);
-							
+
 							p = z.next_in_index; n = z.avail_in; b = s.bitb; k = s.bitk;
 							q = s.write; m = q < s.read?s.read - q - 1:s.end - q;
-							
+
 							if (r != Z_OK)
 							{
 								mode = r == Z_STREAM_END?WASH:BADCODE;
@@ -152,20 +152,20 @@ namespace Rebex.IO.Compression
 						need = lbits;
 						tree = ltree;
 						tree_index = ltree_index;
-						
+
 						mode = LEN;
 						goto case LEN;
-					
+
 					case LEN:  // i: get length/literal/eob next
 						j = need;
-						
+
 						while (k < (j))
 						{
 							if (n != 0)
 								r = Z_OK;
 							else
 							{
-								
+
 								s.bitb = b; s.bitk = k;
 								z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 								s.write = q;
@@ -175,14 +175,14 @@ namespace Rebex.IO.Compression
 							b |= (z.next_in[p++] & 0xff) << k;
 							k += 8;
 						}
-						
+
 						tindex = (tree_index + (b & inflate_mask[j])) * 3;
-						
+
 						b = SupportClass.URShift(b, (tree[tindex + 1]));
 						k -= (tree[tindex + 1]);
-						
+
 						e = tree[tindex];
-						
+
 						if (e == 0)
 						{
 							// literal
@@ -214,23 +214,23 @@ namespace Rebex.IO.Compression
 						mode = BADCODE; // invalid code
 						z.msg = "invalid literal/length code";
 						r = Z_DATA_ERROR;
-						
+
 						s.bitb = b; s.bitk = k;
 						z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 						s.write = q;
 						return s.inflate_flush(z, r);
-					
-					
+
+
 					case LENEXT:  // i: getting length extra (have base)
 						j = get_Renamed;
-						
+
 						while (k < (j))
 						{
 							if (n != 0)
 								r = Z_OK;
 							else
 							{
-								
+
 								s.bitb = b; s.bitk = k;
 								z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 								s.write = q;
@@ -239,28 +239,28 @@ namespace Rebex.IO.Compression
 							n--; b |= (z.next_in[p++] & 0xff) << k;
 							k += 8;
 						}
-						
+
 						len += (b & inflate_mask[j]);
-						
+
 						b >>= j;
 						k -= j;
-						
+
 						need = dbits;
 						tree = dtree;
 						tree_index = dtree_index;
 						mode = DIST;
 						goto case DIST;
-					
-					case DIST:  // i: get distance next
+
+					case DIST:	// i: get distance next
 						j = need;
-						
+
 						while (k < (j))
 						{
 							if (n != 0)
 								r = Z_OK;
 							else
 							{
-								
+
 								s.bitb = b; s.bitk = k;
 								z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 								s.write = q;
@@ -269,12 +269,12 @@ namespace Rebex.IO.Compression
 							n--; b |= (z.next_in[p++] & 0xff) << k;
 							k += 8;
 						}
-						
+
 						tindex = (tree_index + (b & inflate_mask[j])) * 3;
-						
+
 						b >>= tree[tindex + 1];
 						k -= tree[tindex + 1];
-						
+
 						e = (tree[tindex]);
 						if ((e & 16) != 0)
 						{
@@ -294,23 +294,23 @@ namespace Rebex.IO.Compression
 						mode = BADCODE; // invalid code
 						z.msg = "invalid distance code";
 						r = Z_DATA_ERROR;
-						
+
 						s.bitb = b; s.bitk = k;
 						z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 						s.write = q;
 						return s.inflate_flush(z, r);
-					
-					
+
+
 					case DISTEXT:  // i: getting distance extra
 						j = get_Renamed;
-						
+
 						while (k < (j))
 						{
 							if (n != 0)
 								r = Z_OK;
 							else
 							{
-								
+
 								s.bitb = b; s.bitk = k;
 								z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 								s.write = q;
@@ -319,16 +319,16 @@ namespace Rebex.IO.Compression
 							n--; b |= (z.next_in[p++] & 0xff) << k;
 							k += 8;
 						}
-						
+
 						dist += (b & inflate_mask[j]);
-						
+
 						b >>= j;
 						k -= j;
-						
+
 						mode = COPY;
 						goto case COPY;
-					
-					case COPY:  // o: copying bytes in window, waiting for space
+
+					case COPY:	// o: copying bytes in window, waiting for space
 						f = q - dist;
 						while (f < 0)
 						{
@@ -337,7 +337,7 @@ namespace Rebex.IO.Compression
 						}
 						while (len != 0)
 						{
-							
+
 							if (m == 0)
 							{
 								if (q == s.end && s.read != 0)
@@ -348,12 +348,12 @@ namespace Rebex.IO.Compression
 								{
 									s.write = q; r = s.inflate_flush(z, r);
 									q = s.write; m = q < s.read?s.read - q - 1:s.end - q;
-									
+
 									if (q == s.end && s.read != 0)
 									{
 										q = 0; m = q < s.read?s.read - q - 1:s.end - q;
 									}
-									
+
 									if (m == 0)
 									{
 										s.bitb = b; s.bitk = k;
@@ -363,16 +363,16 @@ namespace Rebex.IO.Compression
 									}
 								}
 							}
-							
+
 							s.window[q++] = s.window[f++]; m--;
-							
+
 							if (f == s.end)
 								f = 0;
 							len--;
 						}
 						mode = START;
 						break;
-					
+
 					case LIT:  // o: got literal, waiting for output space
 						if (m == 0)
 						{
@@ -384,7 +384,7 @@ namespace Rebex.IO.Compression
 							{
 								s.write = q; r = s.inflate_flush(z, r);
 								q = s.write; m = q < s.read?s.read - q - 1:s.end - q;
-								
+
 								if (q == s.end && s.read != 0)
 								{
 									q = 0; m = q < s.read?s.read - q - 1:s.end - q;
@@ -399,13 +399,13 @@ namespace Rebex.IO.Compression
 							}
 						}
 						r = Z_OK;
-						
+
 						s.window[q++] = (byte) lit; m--;
-						
+
 						mode = START;
 						break;
-					
-					case WASH:  // o: got eob, possibly more output
+
+					case WASH:	// o: got eob, possibly more output
 						if (k > 7)
 						{
 							// return unused byte, if any
@@ -413,10 +413,10 @@ namespace Rebex.IO.Compression
 							n++;
 							p--; // can always return one
 						}
-						
+
 						s.write = q; r = s.inflate_flush(z, r);
 						q = s.write; m = q < s.read?s.read - q - 1:s.end - q;
-						
+
 						if (s.read != s.write)
 						{
 							s.bitb = b; s.bitk = k;
@@ -426,47 +426,47 @@ namespace Rebex.IO.Compression
 						}
 						mode = END;
 						goto case END;
-					
-					case END: 
+
+					case END:
 						r = Z_STREAM_END;
 						s.bitb = b; s.bitk = k;
 						z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 						s.write = q;
 						return s.inflate_flush(z, r);
-					
-					
+
+
 					case BADCODE:  // x: got error
-						
+
 						r = Z_DATA_ERROR;
-						
+
 						s.bitb = b; s.bitk = k;
 						z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 						s.write = q;
 						return s.inflate_flush(z, r);
-					
-					
-					default: 
+
+
+					default:
 						r = Z_STREAM_ERROR;
-						
+
 						s.bitb = b; s.bitk = k;
 						z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 						s.write = q;
 						return s.inflate_flush(z, r);
-					
+
 				}
 			}
 		}
-		
+
 		internal void  free(ZStream z)
 		{
-			//  ZFREE(z, c);
+			//	ZFREE(z, c);
 		}
-		
+
 		// Called with number of bytes left to write in window at least 258
 		// (the maximum string length) and number of input bytes available
 		// at least ten.  The ten bytes are six bytes for the longest length/
 		// distance pair plus four bytes for overloading the bit buffer.
-		
+
 		internal int inflate_fast(int bl, int bd, int[] tl, int tl_index, int[] td, int td_index, InfBlocks s, ZStream z)
 		{
 			int t; // temporary pointer
@@ -484,19 +484,19 @@ namespace Rebex.IO.Compression
 			int c; // bytes to copy
 			int d; // distance back to copy from
 			int r; // copy source pointer
-			
+
 			int tp_index_t_3; // (tp_index+t)*3
-			
+
 			// load input, output, bit values
 			p = z.next_in_index; n = z.avail_in; b = s.bitb; k = s.bitk;
 			q = s.write; m = q < s.read?s.read - q - 1:s.end - q;
-			
+
 			// initialize masks
 			ml = inflate_mask[bl];
 			md = inflate_mask[bd];
-			
+
 			// do until not enough input or output space for fast loop
-			do 
+			do
 			{
 				// assume called with m >= 258 && n >= 10
 				// get literal/length code
@@ -506,7 +506,7 @@ namespace Rebex.IO.Compression
 					n--;
 					b |= (z.next_in[p++] & 0xff) << k; k += 8;
 				}
-				
+
 				t = b & ml;
 				tp = tl;
 				tp_index = tl_index;
@@ -514,23 +514,23 @@ namespace Rebex.IO.Compression
 				if ((e = tp[tp_index_t_3]) == 0)
 				{
 					b >>= (tp[tp_index_t_3 + 1]); k -= (tp[tp_index_t_3 + 1]);
-					
+
 					s.window[q++] = (byte) tp[tp_index_t_3 + 2];
 					m--;
 					continue;
 				}
-				do 
+				do
 				{
-					
+
 					b >>= (tp[tp_index_t_3 + 1]); k -= (tp[tp_index_t_3 + 1]);
-					
+
 					if ((e & 16) != 0)
 					{
 						e &= 15;
 						c = tp[tp_index_t_3 + 2] + ((int) b & inflate_mask[e]);
-						
+
 						b >>= e; k -= e;
-						
+
 						// decode distance base of block to copy
 						while (k < (15))
 						{
@@ -538,18 +538,18 @@ namespace Rebex.IO.Compression
 							n--;
 							b |= (z.next_in[p++] & 0xff) << k; k += 8;
 						}
-						
+
 						t = b & md;
 						tp = td;
 						tp_index = td_index;
 						tp_index_t_3 = (tp_index + t) * 3;
 						e = tp[tp_index_t_3];
-						
-						do 
+
+						do
 						{
-							
+
 							b >>= (tp[tp_index_t_3 + 1]); k -= (tp[tp_index_t_3 + 1]);
-							
+
 							if ((e & 16) != 0)
 							{
 								// get extra bits to add to distance base
@@ -560,17 +560,17 @@ namespace Rebex.IO.Compression
 									n--;
 									b |= (z.next_in[p++] & 0xff) << k; k += 8;
 								}
-								
+
 								d = tp[tp_index_t_3 + 2] + (b & inflate_mask[e]);
-								
+
 								b >>= (e); k -= (e);
-								
+
 								// do the copy
 								m -= c;
 								if (q >= d)
 								{
 									// offset before dest
-									//  just copy
+									//	just copy
 									r = q - d;
 									if (q - r > 0 && 2 > (q - r))
 									{
@@ -588,7 +588,7 @@ namespace Rebex.IO.Compression
 								{
 									// else offset after destination
 									r = q - d;
-									do 
+									do
 									{
 										r += s.end; // force pointer in window
 									}
@@ -600,7 +600,7 @@ namespace Rebex.IO.Compression
 										c -= e; // wrapped copy
 										if (q - r > 0 && e > (q - r))
 										{
-											do 
+											do
 											{
 												s.window[q++] = s.window[r++];
 											}
@@ -614,11 +614,11 @@ namespace Rebex.IO.Compression
 										r = 0; // copy rest from start of window
 									}
 								}
-								
+
 								// copy all or what's left
 								if (q - r > 0 && c > (q - r))
 								{
-									do 
+									do
 									{
 										s.window[q++] = s.window[r++];
 									}
@@ -641,20 +641,20 @@ namespace Rebex.IO.Compression
 							else
 							{
 								z.msg = "invalid distance code";
-								
+
 								c = z.avail_in - n; c = (k >> 3) < c?k >> 3:c; n += c; p -= c; k -= (c << 3);
-								
+
 								s.bitb = b; s.bitk = k;
 								z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 								s.write = q;
-								
+
 								return Z_DATA_ERROR;
 							}
 						}
 						while (true);
 						break;
 					}
-					
+
 					if ((e & 64) == 0)
 					{
 						t += tp[tp_index_t_3 + 2];
@@ -662,9 +662,9 @@ namespace Rebex.IO.Compression
 						tp_index_t_3 = (tp_index + t) * 3;
 						if ((e = tp[tp_index_t_3]) == 0)
 						{
-							
+
 							b >>= (tp[tp_index_t_3 + 1]); k -= (tp[tp_index_t_3 + 1]);
-							
+
 							s.window[q++] = (byte) tp[tp_index_t_3 + 2];
 							m--;
 							break;
@@ -672,40 +672,41 @@ namespace Rebex.IO.Compression
 					}
 					else if ((e & 32) != 0)
 					{
-						
+
 						c = z.avail_in - n; c = (k >> 3) < c?k >> 3:c; n += c; p -= c; k -= (c << 3);
-						
+
 						s.bitb = b; s.bitk = k;
 						z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 						s.write = q;
-						
+
 						return Z_STREAM_END;
 					}
 					else
 					{
 						z.msg = "invalid literal/length code";
-						
+
 						c = z.avail_in - n; c = (k >> 3) < c?k >> 3:c; n += c; p -= c; k -= (c << 3);
-						
+
 						s.bitb = b; s.bitk = k;
 						z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 						s.write = q;
-						
+
 						return Z_DATA_ERROR;
 					}
 				}
 				while (true);
 			}
 			while (m >= 258 && n >= 10);
-			
+
 			// not enough input or output--restore pointers and return
 			c = z.avail_in - n; c = (k >> 3) < c?k >> 3:c; n += c; p -= c; k -= (c << 3);
-			
+
 			s.bitb = b; s.bitk = k;
 			z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 			s.write = q;
-			
+
 			return Z_OK;
 		}
 	}
 }
+#endif

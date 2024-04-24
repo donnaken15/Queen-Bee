@@ -1,6 +1,6 @@
-
+#if !NO_ZLIB
 //
-// This file is part of Rebex ZlibStream for .NET and is based 
+// This file is part of Rebex ZlibStream for .NET and is based
 // on JCraft's JZlib Java library.
 // You can download the latest version from http://www.rebex.net/zlib-stream.net/
 //
@@ -13,8 +13,8 @@ modification, are permitted provided that the following conditions are met:
 1. Redistributions of source code must retain the above copyright notice,
 this list of conditions and the following disclaimer.
 
-2. Redistributions in binary form must reproduce the above copyright 
-notice, this list of conditions and the following disclaimer in 
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in
 the documentation and/or other materials provided with the distribution.
 
 3. The names of the authors may not be used to endorse or promote products
@@ -39,7 +39,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 namespace Rebex.IO.Compression
 {
-	
+
 	internal sealed class JZlib
 	{
 		private const System.String version_Renamed_Field = "1.0.2";
@@ -47,24 +47,24 @@ namespace Rebex.IO.Compression
 		{
 			return version_Renamed_Field;
 		}
-		
+
 		// compression levels
 		public const int Z_NO_COMPRESSION = 0;
 		public const int Z_BEST_SPEED = 1;
 		public const int Z_BEST_COMPRESSION = 9;
 		public const int Z_DEFAULT_COMPRESSION = (- 1);
-		
+
 		// compression strategy
 		public const int Z_FILTERED = 1;
 		public const int Z_HUFFMAN_ONLY = 2;
 		public const int Z_DEFAULT_STRATEGY = 0;
-		
+
 		public const int Z_NO_FLUSH = 0;
 		public const int Z_PARTIAL_FLUSH = 1;
 		public const int Z_SYNC_FLUSH = 2;
 		public const int Z_FULL_FLUSH = 3;
 		public const int Z_FINISH = 4;
-		
+
 		public const int Z_OK = 0;
 		public const int Z_STREAM_END = 1;
 		public const int Z_NEED_DICT = 2;
@@ -76,3 +76,4 @@ namespace Rebex.IO.Compression
 		public const int Z_VERSION_ERROR = - 6;
 	}
 }
+#endif

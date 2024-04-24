@@ -1,6 +1,6 @@
-
+#if !NO_ZLIB
 //
-// This file is part of Rebex ZlibStream for .NET and is based 
+// This file is part of Rebex ZlibStream for .NET and is based
 // on JCraft's JZlib Java library.
 // You can download the latest version from http://www.rebex.net/zlib-stream.net/
 //
@@ -13,8 +13,8 @@ modification, are permitted provided that the following conditions are met:
 1. Redistributions of source code must retain the above copyright notice,
 this list of conditions and the following disclaimer.
 
-2. Redistributions in binary form must reproduce the above copyright 
-notice, this list of conditions and the following disclaimer in 
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in
 the documentation and/or other materials provided with the distribution.
 
 3. The names of the authors may not be used to endorse or promote products
@@ -39,17 +39,17 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using System;
 namespace Rebex.IO.Compression
 {
-	
+
 	internal sealed class InfBlocks
 	{
 		private const int MANY = 1440;
-		
+
 		// And'ing with mask[n] masks the lower n bits
 		private static readonly int[] inflate_mask = new int[]{0x00000000, 0x00000001, 0x00000003, 0x00000007, 0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f, 0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff, 0x00000fff, 0x00001fff, 0x00003fff, 0x00007fff, 0x0000ffff};
-		
+
 		// Table for deflate from PKZIP's appnote.txt.
 		internal static readonly int[] border = new int[]{16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
-		
+
 		private const int Z_OK = 0;
 		private const int Z_STREAM_END = 1;
 		private const int Z_NEED_DICT = 2;
@@ -59,7 +59,7 @@ namespace Rebex.IO.Compression
 		private const int Z_MEM_ERROR = - 4;
 		private const int Z_BUF_ERROR = - 5;
 		private const int Z_VERSION_ERROR = - 6;
-		
+
 		private const int TYPE = 0; // get type bits (3, including end bit)
 		private const int LENS = 1; // get lengths for stored
 		private const int STORED = 2; // processing stored block
@@ -70,34 +70,34 @@ namespace Rebex.IO.Compression
 		private const int DRY = 7; // output remaining window bytes
 		private const int DONE = 8; // finished last block, done
 		private const int BAD = 9; // ot a data error--stuck here
-		
-		internal int mode; // current inflate_block mode 
-		
-		internal int left; // if STORED, bytes left to copy 
-		
-		internal int table; // table lengths (14 bits) 
-		internal int index; // index into blens (or border) 
-		internal int[] blens; // bit lengths of codes 
-		internal int[] bb = new int[1]; // bit length tree depth 
-		internal int[] tb = new int[1]; // bit length decoding tree 
-		
-		internal InfCodes codes = new InfCodes(); // if CODES, current state 
-		
-		internal int last; // true if this block is the last block 
-		
-		// mode independent information 
-		internal int bitk; // bits in bit buffer 
-		internal int bitb; // bit buffer 
-		internal int[] hufts; // single malloc for tree space 
-		internal byte[] window; // sliding window 
-		internal int end; // one byte after sliding window 
-		internal int read; // window read pointer 
-		internal int write; // window write pointer 
-		internal System.Object checkfn; // check function 
-		internal long check; // check on output 
-		
+
+		internal int mode; // current inflate_block mode
+
+		internal int left; // if STORED, bytes left to copy
+
+		internal int table; // table lengths (14 bits)
+		internal int index; // index into blens (or border)
+		internal int[] blens; // bit lengths of codes
+		internal int[] bb = new int[1]; // bit length tree depth
+		internal int[] tb = new int[1]; // bit length decoding tree
+
+		internal InfCodes codes = new InfCodes(); // if CODES, current state
+
+		internal int last; // true if this block is the last block
+
+		// mode independent information
+		internal int bitk; // bits in bit buffer
+		internal int bitb; // bit buffer
+		internal int[] hufts; // single malloc for tree space
+		internal byte[] window; // sliding window
+		internal int end; // one byte after sliding window
+		internal int read; // window read pointer
+		internal int write; // window write pointer
+		internal System.Object checkfn; // check function
+		internal long check; // check on output
+
 		internal InfTree inftree = new InfTree();
-		
+
 		internal InfBlocks(ZStream z, System.Object checkfn, int w)
 		{
 			hufts = new int[MANY * 3];
@@ -107,7 +107,7 @@ namespace Rebex.IO.Compression
 			mode = TYPE;
 			reset(z, null);
 		}
-		
+
 		internal void  reset(ZStream z, long[] c)
 		{
 			if (c != null)
@@ -123,11 +123,11 @@ namespace Rebex.IO.Compression
 			bitk = 0;
 			bitb = 0;
 			read = write = 0;
-			
+
 			if (checkfn != null)
 				z.adler = check = z._adler.adler32(0L, null, 0, 0);
 		}
-		
+
 		internal int proc(ZStream z, int r)
 		{
 			int t; // temporary storage
@@ -137,7 +137,7 @@ namespace Rebex.IO.Compression
 			int n; // bytes available there
 			int q; // output window write pointer
 			int m; // bytes to end of window or read pointer
-			
+
 			// copy input/output information to locals (UPDATE macro restores)
 			{
 				p = z.next_in_index; n = z.avail_in; b = bitb; k = bitk;
@@ -145,15 +145,15 @@ namespace Rebex.IO.Compression
 			{
 				q = write; m = (int) (q < read?read - q - 1:end - q);
 			}
-			
+
 			// process input based on current state
 			while (true)
 			{
 				switch (mode)
 				{
-					
-					case TYPE: 
-						
+
+					case TYPE:
+
 						while (k < (3))
 						{
 							if (n != 0)
@@ -175,67 +175,67 @@ namespace Rebex.IO.Compression
 						}
 						t = (int) (b & 7);
 						last = t & 1;
-						
+
 						switch (SupportClass.URShift(t, 1))
 						{
-							
-							case 0:  // stored 
+
+							case 0:	 // stored
 								{
 									b = SupportClass.URShift(b, (3)); k -= (3);
 								}
 								t = k & 7; // go to byte boundary
-								
+
 								{
 									b = SupportClass.URShift(b, (t)); k -= (t);
 								}
 								mode = LENS; // get length of stored block
 								break;
-							
-							case 1:  // fixed
+
+							case 1:	 // fixed
 								{
 									int[] bl = new int[1];
 									int[] bd = new int[1];
 									int[][] tl = new int[1][];
 									int[][] td = new int[1][];
-									
+
 									InfTree.inflate_trees_fixed(bl, bd, tl, td, z);
 									codes.init(bl[0], bd[0], tl[0], 0, td[0], 0, z);
 								}
-								
+
 								{
 									b = SupportClass.URShift(b, (3)); k -= (3);
 								}
-								
+
 								mode = CODES;
 								break;
-							
-							case 2:  // dynamic
-								
+
+							case 2:	 // dynamic
+
 								{
 									b = SupportClass.URShift(b, (3)); k -= (3);
 								}
-								
+
 								mode = TABLE;
 								break;
-							
-							case 3:  // illegal
-								
+
+							case 3:	 // illegal
+
 								{
 									b = SupportClass.URShift(b, (3)); k -= (3);
 								}
 								mode = BAD;
 								z.msg = "invalid block type";
 								r = Z_DATA_ERROR;
-								
+
 								bitb = b; bitk = k;
 								z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 								write = q;
 								return inflate_flush(z, r);
 							}
 						break;
-					
-					case LENS: 
-						
+
+					case LENS:
+
 						while (k < (32))
 						{
 							if (n != 0)
@@ -255,13 +255,13 @@ namespace Rebex.IO.Compression
 							b |= (z.next_in[p++] & 0xff) << k;
 							k += 8;
 						}
-						
+
 						if (((SupportClass.URShift((~ b), 16)) & 0xffff) != (b & 0xffff))
 						{
 							mode = BAD;
 							z.msg = "invalid stored block lengths";
 							r = Z_DATA_ERROR;
-							
+
 							bitb = b; bitk = k;
 							z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 							write = q;
@@ -271,8 +271,8 @@ namespace Rebex.IO.Compression
 						b = k = 0; // dump bits
 						mode = left != 0?STORED:(last != 0?DRY:TYPE);
 						break;
-					
-					case STORED: 
+
+					case STORED:
 						if (n == 0)
 						{
 							bitb = b; bitk = k;
@@ -280,7 +280,7 @@ namespace Rebex.IO.Compression
 							write = q;
 							return inflate_flush(z, r);
 						}
-						
+
 						if (m == 0)
 						{
 							if (q == end && read != 0)
@@ -306,7 +306,7 @@ namespace Rebex.IO.Compression
 							}
 						}
 						r = Z_OK;
-						
+
 						t = left;
 						if (t > n)
 							t = n;
@@ -319,9 +319,9 @@ namespace Rebex.IO.Compression
 							break;
 						mode = last != 0?DRY:TYPE;
 						break;
-					
-					case TABLE: 
-						
+
+					case TABLE:
+
 						while (k < (14))
 						{
 							if (n != 0)
@@ -341,14 +341,14 @@ namespace Rebex.IO.Compression
 							b |= (z.next_in[p++] & 0xff) << k;
 							k += 8;
 						}
-						
+
 						table = t = (b & 0x3fff);
 						if ((t & 0x1f) > 29 || ((t >> 5) & 0x1f) > 29)
 						{
 							mode = BAD;
 							z.msg = "too many length or distance symbols";
 							r = Z_DATA_ERROR;
-							
+
 							bitb = b; bitk = k;
 							z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 							write = q;
@@ -366,16 +366,16 @@ namespace Rebex.IO.Compression
 								blens[i] = 0;
 							}
 						}
-						
+
 						{
 							b = SupportClass.URShift(b, (14)); k -= (14);
 						}
-						
+
 						index = 0;
 						mode = BTREE;
 						goto case BTREE;
-					
-					case BTREE: 
+
+					case BTREE:
 						while (index < 4 + (SupportClass.URShift(table, 10)))
 						{
 							while (k < (3))
@@ -397,19 +397,19 @@ namespace Rebex.IO.Compression
 								b |= (z.next_in[p++] & 0xff) << k;
 								k += 8;
 							}
-							
+
 							blens[border[index++]] = b & 7;
-							
+
 							{
 								b = SupportClass.URShift(b, (3)); k -= (3);
 							}
 						}
-						
+
 						while (index < 19)
 						{
 							blens[border[index++]] = 0;
 						}
-						
+
 						bb[0] = 7;
 						t = inftree.inflate_trees_bits(blens, bb, tb, hufts, z);
 						if (t != Z_OK)
@@ -420,18 +420,18 @@ namespace Rebex.IO.Compression
 								blens = null;
 								mode = BAD;
 							}
-							
+
 							bitb = b; bitk = k;
 							z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 							write = q;
 							return inflate_flush(z, r);
 						}
-						
+
 						index = 0;
 						mode = DTREE;
 						goto case DTREE;
-					
-					case DTREE: 
+
+					case DTREE:
 						while (true)
 						{
 							t = table;
@@ -439,12 +439,12 @@ namespace Rebex.IO.Compression
 							{
 								break;
 							}
-							
+
 							//int[] h;
 							int i, j, c;
-							
+
 							t = bb[0];
-							
+
 							while (k < (t))
 							{
 								if (n != 0)
@@ -464,15 +464,15 @@ namespace Rebex.IO.Compression
 								b |= (z.next_in[p++] & 0xff) << k;
 								k += 8;
 							}
-							
+
 							if (tb[0] == - 1)
 							{
 								//System.err.println("null...");
 							}
-							
+
 							t = hufts[(tb[0] + (b & inflate_mask[t])) * 3 + 1];
 							c = hufts[(tb[0] + (b & inflate_mask[t])) * 3 + 2];
-							
+
 							if (c < 16)
 							{
 								b = SupportClass.URShift(b, (t)); k -= (t);
@@ -483,7 +483,7 @@ namespace Rebex.IO.Compression
 								// c == 16..18
 								i = c == 18?7:c - 14;
 								j = c == 18?11:3;
-								
+
 								while (k < (t + i))
 								{
 									if (n != 0)
@@ -503,13 +503,13 @@ namespace Rebex.IO.Compression
 									b |= (z.next_in[p++] & 0xff) << k;
 									k += 8;
 								}
-								
+
 								b = SupportClass.URShift(b, (t)); k -= (t);
-								
+
 								j += (b & inflate_mask[i]);
-								
+
 								b = SupportClass.URShift(b, (i)); k -= (i);
-								
+
 								i = index;
 								t = table;
 								if (i + j > 258 + (t & 0x1f) + ((t >> 5) & 0x1f) || (c == 16 && i < 1))
@@ -518,15 +518,15 @@ namespace Rebex.IO.Compression
 									mode = BAD;
 									z.msg = "invalid bit length repeat";
 									r = Z_DATA_ERROR;
-									
+
 									bitb = b; bitk = k;
 									z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 									write = q;
 									return inflate_flush(z, r);
 								}
-								
+
 								c = c == 16?blens[i - 1]:0;
-								do 
+								do
 								{
 									blens[i++] = c;
 								}
@@ -534,7 +534,7 @@ namespace Rebex.IO.Compression
 								index = i;
 							}
 						}
-						
+
 						tb[0] = - 1;
 						{
 							int[] bl = new int[1];
@@ -543,10 +543,10 @@ namespace Rebex.IO.Compression
 							int[] td = new int[1];
 							bl[0] = 9; // must be <= 9 for lookahead assumptions
 							bd[0] = 6; // must be <= 9 for lookahead assumptions
-							
+
 							t = table;
 							t = inftree.inflate_trees_dynamic(257 + (t & 0x1f), 1 + ((t >> 5) & 0x1f), blens, bl, bd, tl, td, hufts, z);
-							
+
 							if (t != Z_OK)
 							{
 								if (t == Z_DATA_ERROR)
@@ -555,7 +555,7 @@ namespace Rebex.IO.Compression
 									mode = BAD;
 								}
 								r = t;
-								
+
 								bitb = b; bitk = k;
 								z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 								write = q;
@@ -565,22 +565,22 @@ namespace Rebex.IO.Compression
 						}
 						mode = CODES;
 						goto case CODES;
-					
-					case CODES: 
+
+					case CODES:
 						bitb = b; bitk = k;
 						z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 						write = q;
-						
+
 						if ((r = codes.proc(this, z, r)) != Z_STREAM_END)
 						{
 							return inflate_flush(z, r);
 						}
 						r = Z_OK;
 						codes.free(z);
-						
+
 						p = z.next_in_index; n = z.avail_in; b = bitb; k = bitk;
 						q = write; m = (int) (q < read?read - q - 1:end - q);
-						
+
 						if (last == 0)
 						{
 							mode = TYPE;
@@ -588,8 +588,8 @@ namespace Rebex.IO.Compression
 						}
 						mode = DRY;
 						goto case DRY;
-					
-					case DRY: 
+
+					case DRY:
 						write = q;
 						r = inflate_flush(z, r);
 						q = write; m = (int) (q < read?read - q - 1:end - q);
@@ -602,36 +602,36 @@ namespace Rebex.IO.Compression
 						}
 						mode = DONE;
 						goto case DONE;
-					
-					case DONE: 
+
+					case DONE:
 						r = Z_STREAM_END;
-						
+
 						bitb = b; bitk = k;
 						z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 						write = q;
 						return inflate_flush(z, r);
-					
-					case BAD: 
+
+					case BAD:
 						r = Z_DATA_ERROR;
-						
+
 						bitb = b; bitk = k;
 						z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 						write = q;
 						return inflate_flush(z, r);
-					
-					
-					default: 
+
+
+					default:
 						r = Z_STREAM_ERROR;
-						
+
 						bitb = b; bitk = k;
 						z.avail_in = n; z.total_in += p - z.next_in_index; z.next_in_index = p;
 						write = q;
 						return inflate_flush(z, r);
-					
+
 				}
 			}
 		}
-		
+
 		internal void  free(ZStream z)
 		{
 			reset(z, null);
@@ -639,51 +639,51 @@ namespace Rebex.IO.Compression
 			hufts = null;
 			//ZFREE(z, s);
 		}
-		
+
 		internal void  set_dictionary(byte[] d, int start, int n)
 		{
 			Array.Copy(d, start, window, 0, n);
 			read = write = n;
 		}
-		
+
 		// Returns true if inflate is currently at the end of a block generated
-		// by Z_SYNC_FLUSH or Z_FULL_FLUSH. 
+		// by Z_SYNC_FLUSH or Z_FULL_FLUSH.
 		internal int sync_point()
 		{
 			return mode == LENS?1:0;
 		}
-		
+
 		// copy as much as possible from the sliding window to the output area
 		internal int inflate_flush(ZStream z, int r)
 		{
 			int n;
 			int p;
 			int q;
-			
+
 			// local copies of source and destination pointers
 			p = z.next_out_index;
 			q = read;
-			
+
 			// compute number of bytes to copy as far as end of window
 			n = (int) ((q <= write?write:end) - q);
 			if (n > z.avail_out)
 				n = z.avail_out;
 			if (n != 0 && r == Z_BUF_ERROR)
 				r = Z_OK;
-			
+
 			// update counters
 			z.avail_out -= n;
 			z.total_out += n;
-			
+
 			// update check information
 			if (checkfn != null)
 				z.adler = check = z._adler.adler32(check, window, q, n);
-			
+
 			// copy as far as end of window
 			Array.Copy(window, q, z.next_out, p, n);
 			p += n;
 			q += n;
-			
+
 			// see if more to copy at beginning of window
 			if (q == end)
 			{
@@ -691,34 +691,35 @@ namespace Rebex.IO.Compression
 				q = 0;
 				if (write == end)
 					write = 0;
-				
+
 				// compute bytes to copy
 				n = write - q;
 				if (n > z.avail_out)
 					n = z.avail_out;
 				if (n != 0 && r == Z_BUF_ERROR)
 					r = Z_OK;
-				
+
 				// update counters
 				z.avail_out -= n;
 				z.total_out += n;
-				
+
 				// update check information
 				if (checkfn != null)
 					z.adler = check = z._adler.adler32(check, window, q, n);
-				
+
 				// copy
 				Array.Copy(window, q, z.next_out, p, n);
 				p += n;
 				q += n;
 			}
-			
+
 			// update pointers
 			z.next_out_index = p;
 			read = q;
-			
+
 			// done
 			return r;
 		}
 	}
 }
+#endif
