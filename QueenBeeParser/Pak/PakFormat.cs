@@ -554,7 +554,8 @@ namespace Nanook.QueenBee.Parser
 		public void Compress()
 		{
 #if NO_ZLIB
-			throw new NotImplementedException("Zlib compression is not supported on this build.");
+			if (this.PakFormatType != PakFormatType.PC && this.PakFormatType != PakFormatType.PC_WPC)
+				throw new NotImplementedException("Zlib compression is not supported on this build.");
 #else
 			if (this.IsCompressed)
 			{

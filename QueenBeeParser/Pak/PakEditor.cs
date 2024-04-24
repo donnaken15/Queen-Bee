@@ -832,7 +832,8 @@ namespace Nanook.QueenBee.Parser
 		private void fixUncompressedFileLengths(string newPakFilename, string newPabFilename)
 		{
 #if PC_ONLY
-			throw new NotImplementedException("Only PC PAK is supported on this build.");
+			if (this._pakFormat.PakFormatType != PakFormatType.PC && this._pakFormat.PakFormatType != PakFormatType.PC_WPC)
+				throw new NotImplementedException("Only PC PAK is supported on this build.");
 #else
 			byte[] padData = new byte[(int)_pakFormat.ZlibFilePad];
 
