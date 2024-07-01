@@ -578,7 +578,9 @@ namespace Nanook.QueenBee.Parser
 		{
 			//try
 			//{
+#if !NO_ZLIB
 			CompressionType ct = CompressionType.None;
+#endif
 
 #if PC_ONLY
 			if (this.PakFormatType != PakFormatType.PC && this.PakFormatType != PakFormatType.PC_WPC)
